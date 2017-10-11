@@ -7,7 +7,7 @@ import {
   Animated,
   StyleSheet,
   Platform,
-  ViewPropTypes
+  ViewPropTypes,
 } from "react-native";
 
 import RN from "react-native/package.json";
@@ -47,7 +47,12 @@ export default class TextField extends PureComponent {
     errorColor: "rgb(213, 0, 0)",
 
     disabled: false,
-    disabledLineType: "dotted"
+    disabledLineType: "dotted",
+
+    placeholder: undefined,
+    fontFamily: undefined,
+
+    displayHelper: false,
   };
 
   static propTypes = {
@@ -55,7 +60,8 @@ export default class TextField extends PureComponent {
 
     animationDuration: PropTypes.number,
 
-    fontFamily: PropTypes.string.isRequired,
+    placeholder: PropTypes.string,
+    fontFamily: PropTypes.string,
     fontSize: PropTypes.number,
     titleFontSize: PropTypes.number,
     labelFontSize: PropTypes.number,
@@ -91,8 +97,10 @@ export default class TextField extends PureComponent {
     prefix: PropTypes.string,
     suffix: PropTypes.string,
 
+    displayHelper: PropTypes.bool,
+
     containerStyle: (ViewPropTypes || View.propTypes).style,
-    inputContainerStyle: (ViewPropTypes || View.propTypes).style
+    inputContainerStyle: (ViewPropTypes || View.propTypes).style,
   };
 
   constructor(props) {
@@ -120,7 +128,7 @@ export default class TextField extends PureComponent {
       error: error,
       errored: !!error,
 
-      height: fontSize * 1.5
+      height: fontSize * 1.5,
     };
   }
 
@@ -155,7 +163,7 @@ export default class TextField extends PureComponent {
     if (props.error !== error || focused ^ state.focused) {
       Animated.timing(focus, {
         toValue: props.error ? -1 : state.focused ? 1 : 0,
-        duration: animationDuration
+        duration: animationDuration,
       }).start(() => {
         if (this.mounted) {
           this.setState((state, { error }) => ({ error }));
@@ -261,7 +269,7 @@ export default class TextField extends PureComponent {
       height: Math.max(
         fontSize * 1.5,
         Math.ceil(height) + Platform.select({ ios: 5, android: 1 })
-      )
+      ),
     });
   }
 
@@ -281,7 +289,7 @@ export default class TextField extends PureComponent {
       fontSize,
       baseColor,
       animationDuration,
-      affixTextStyle
+      affixTextStyle,
     } = this.props;
 
     if (null == affix) {
@@ -294,7 +302,7 @@ export default class TextField extends PureComponent {
       focused,
       fontSize,
       baseColor,
-      animationDuration
+      animationDuration,
     };
 
     return (
@@ -312,7 +320,7 @@ export default class TextField extends PureComponent {
       error,
       errored,
       height,
-      text = ""
+      text = "",
     } = this.state;
     let {
       style: inputStyleOverrides,
@@ -344,6 +352,7 @@ export default class TextField extends PureComponent {
       borderColorFocused,
       inputContainerStyle: inputContainerStyleOverrides,
       placeholder,
+      displayHelper,
       ...props
     } = this.props;
 
@@ -372,16 +381,16 @@ export default class TextField extends PureComponent {
           outputRange: [
             errorColor,
             borderColor,
-            changeBorder ? tintColor : borderColor
-          ]
+            changeBorder ? tintColor : borderColor,
+          ],
         });
 
     let borderBottomWidth =
-      !changeBorder || restricted
+      (!changeBorder && !error) || restricted
         ? 1
         : focus.interpolate({
             inputRange: [-1, 0, 1],
-            outputRange: [2, StyleSheet.hairlineWidth, 2]
+            outputRange: [2, StyleSheet.hairlineWidth, 2],
           });
     let inputContainerStyle = {
       paddingTop: labelHeight,
@@ -393,7 +402,7 @@ export default class TextField extends PureComponent {
 
       ...(props.multiline
         ? { height: labelHeight + inputContainerPadding + height }
-        : { height: labelHeight + inputContainerPadding + fontSize * 1.5 })
+        : { height: labelHeight + inputContainerPadding + fontSize * 1.5 }),
     };
 
     let inputStyle = {
@@ -407,35 +416,35 @@ export default class TextField extends PureComponent {
 
             ...Platform.select({
               ios: { top: -1 },
-              android: { textAlignVertical: "top" }
-            })
+              android: { textAlignVertical: "top" },
+            }),
           }
-        : { height: fontSize * 1.5 })
+        : { height: fontSize * 1.5 }),
     };
 
     let errorStyle = {
       color: errorColor,
       opacity: focus.interpolate({
         inputRange: [-1, 0, 1],
-        outputRange: [1, 0, 0]
+        outputRange: [1, 0, 0],
       }),
       fontFamily,
       fontSize: title
         ? titleFontSize
         : focus.interpolate({
             inputRange: [-1, 0, 1],
-            outputRange: [titleFontSize, 0, 0]
-          })
+            outputRange: [titleFontSize, 0, 0],
+          }),
     };
 
     let titleStyle = {
       color: baseColor,
       opacity: focus.interpolate({
         inputRange: [-1, 0, 1],
-        outputRange: [0, 1, 1]
+        outputRange: [0, 1, 1],
       }),
       fontFamily,
-      fontSize: titleFontSize
+      fontSize: titleFontSize,
     };
 
     let helperContainerStyle = {
@@ -445,23 +454,23 @@ export default class TextField extends PureComponent {
           ? titleFontSize * 2
           : focus.interpolate({
               inputRange: [-1, 0, 1],
-              outputRange: [titleFontSize * 2, 8, 8]
-            })
+              outputRange: [titleFontSize * 2, 8, 8],
+            }),
     };
 
     let containerProps = {
       style: containerStyle,
       onStartShouldSetResponder: () => true,
       onResponderRelease: this.onPress,
-      pointerEvents: !disabled && editable ? "auto" : "none"
+      pointerEvents: !disabled && editable ? "auto" : "none",
     };
 
     let inputContainerProps = {
       style: [
         styles.inputContainer,
         inputContainerStyle,
-        inputContainerStyleOverrides
-      ]
+        inputContainerStyleOverrides,
+      ],
     };
 
     let labelProps = {
@@ -477,7 +486,8 @@ export default class TextField extends PureComponent {
       focused,
       errored,
       restricted,
-      style: labelTextStyle
+      fontFamily,
+      style: labelTextStyle,
     };
 
     let counterProps = {
@@ -486,7 +496,7 @@ export default class TextField extends PureComponent {
       count,
       limit,
       fontSize: titleFontSize,
-      style: titleTextStyle
+      style: titleTextStyle,
     };
 
     return (
@@ -494,7 +504,7 @@ export default class TextField extends PureComponent {
         <Animated.View {...inputContainerProps}>
           {disabled && <Line type={disabledLineType} color={baseColor} />}
 
-          <Label {...labelProps}>{label}</Label>
+          <Label {...labelProps}>{error ? error : label}</Label>
 
           <View style={styles.row}>
             {this.renderAffix("prefix", active, focused)}
@@ -519,14 +529,16 @@ export default class TextField extends PureComponent {
           </View>
         </Animated.View>
 
-        <Animated.View style={helperContainerStyle}>
-          <View style={styles.flex}>
-            <Helper style={[errorStyle, titleTextStyle]}>{error}</Helper>
-            <Helper style={[titleStyle, titleTextStyle]}>{title}</Helper>
-          </View>
+        {displayHelper ? (
+          <Animated.View style={helperContainerStyle}>
+            <View style={styles.flex}>
+              <Helper style={[errorStyle, titleTextStyle]}>{error}</Helper>
+              <Helper style={[titleStyle, titleTextStyle]}>{title}</Helper>
+            </View>
 
-          <Counter {...counterProps} />
-        </Animated.View>
+            <Counter {...counterProps} />
+          </Animated.View>
+        ) : null}
       </View>
     );
   }
