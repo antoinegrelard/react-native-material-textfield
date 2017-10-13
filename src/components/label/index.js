@@ -45,7 +45,7 @@ export default class Label extends PureComponent {
     let { active, focused, errored } = this.props;
 
     this.state = {
-      input: new Animated.Value(active || focused ? 1 : 0),
+      input: new Animated.Value(errored || active || focused ? 1 : 0),
       focus: new Animated.Value(errored ? -1 : focused ? 1 : 0),
     };
   }
