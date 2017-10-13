@@ -1,19 +1,19 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   inputContainer: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
 
   input: {
     top: 2,
     padding: 0,
-    margin: 0,
+    // margin: 0,
     flex: 1,
   },
 
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 
   flex: {
@@ -22,7 +22,7 @@ export default StyleSheet.create({
 
   accessory: {
     top: 2,
-    justifyContent: 'center',
-    alignSelf: 'flex-start',
+    justifyContent: "center",
+    alignSelf: "flex-start",
   },
 });
