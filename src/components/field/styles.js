@@ -8,7 +8,7 @@ export default StyleSheet.create({
   input: {
     top: 2,
     padding: 0,
-    // margin: 0,
+    margin: 0,
     flex: 1,
   },
 
