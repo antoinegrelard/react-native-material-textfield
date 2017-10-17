@@ -53,6 +53,7 @@ export default class TextField extends PureComponent {
     fontFamily: undefined,
 
     displayHelper: false,
+    labelLeft: 0,
 
     renderPrefix: () => {},
   };
@@ -102,6 +103,8 @@ export default class TextField extends PureComponent {
     displayHelper: PropTypes.bool,
 
     renderPrefix: PropTypes.func,
+
+    labelLeft: PropTypes.number,
 
     containerStyle: (ViewPropTypes || View.propTypes).style,
     inputContainerStyle: (ViewPropTypes || View.propTypes).style,
@@ -358,6 +361,7 @@ export default class TextField extends PureComponent {
       placeholder,
       displayHelper,
       renderPrefix,
+      labelLeft,
       ...props
     } = this.props;
 
@@ -492,6 +496,7 @@ export default class TextField extends PureComponent {
       errored,
       restricted,
       fontFamily,
+      labelLeft,
       style: labelTextStyle,
     };
 

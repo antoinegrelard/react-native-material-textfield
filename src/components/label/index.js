@@ -33,6 +33,8 @@ export default class Label extends PureComponent {
 
     style: Animated.Text.propTypes.style,
 
+    labelLeft: PropTypes.number.isRequired,
+
     children: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.node),
       PropTypes.node,
@@ -82,6 +84,7 @@ export default class Label extends PureComponent {
       baseSize,
       basePadding,
       fontFamily,
+      labelLeft,
       style,
       ...props
     } = this.props;
@@ -101,6 +104,11 @@ export default class Label extends PureComponent {
       ],
     });
 
+    let left = input.interpolate({
+      inputRange: [0, 1],
+      outputRange: [labelLeft, 0],
+    });
+
     let textStyle = {
       fontSize: input.interpolate({
         inputRange: [0, 1],
@@ -114,6 +122,7 @@ export default class Label extends PureComponent {
     let containerStyle = {
       position: "absolute",
       top,
+      left,
     };
 
     return (
