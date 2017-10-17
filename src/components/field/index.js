@@ -53,6 +53,8 @@ export default class TextField extends PureComponent {
     fontFamily: undefined,
 
     displayHelper: false,
+
+    renderPrefix: () => {},
   };
 
   static propTypes = {
@@ -98,6 +100,8 @@ export default class TextField extends PureComponent {
     suffix: PropTypes.string,
 
     displayHelper: PropTypes.bool,
+
+    renderPrefix: PropTypes.func,
 
     containerStyle: (ViewPropTypes || View.propTypes).style,
     inputContainerStyle: (ViewPropTypes || View.propTypes).style,
@@ -353,6 +357,7 @@ export default class TextField extends PureComponent {
       inputContainerStyle: inputContainerStyleOverrides,
       placeholder,
       displayHelper,
+      renderPrefix,
       ...props
     } = this.props;
 
@@ -508,6 +513,8 @@ export default class TextField extends PureComponent {
 
           <View style={styles.row}>
             {this.renderAffix("prefix", active, focused)}
+
+            {renderPrefix()}
 
             <TextInput
               style={[styles.input, inputStyle, inputStyleOverrides]}
