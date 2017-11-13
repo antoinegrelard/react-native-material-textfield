@@ -387,13 +387,7 @@ export default class TextField extends PureComponent {
       ? errorColor
       : focus.interpolate({
           inputRange: [-1, 0, 1],
-          outputRange: [
-            errorColor,
-            focused && borderColorFocused ? borderColorFocused : borderColor,
-            changeBorder
-              ? focused && borderColorFocused ? borderColorFocused : tintColor
-              : borderColor,
-          ],
+          outputRange: [errorColor, borderColor, borderColorFocused],
         });
 
     let borderBottomWidth =
