@@ -390,7 +390,9 @@ export default class TextField extends PureComponent {
           outputRange: [
             errorColor,
             borderColor,
-            changeBorder ? tintColor : borderColor,
+            changeBorder
+              ? tintColor
+              : focus && borderColorFocused ? borderColorFocused : borderColor,
           ],
         });
 
