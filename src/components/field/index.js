@@ -183,6 +183,10 @@ export default class TextField extends PureComponent {
     this[name] = ref;
   }
 
+  getRef() {
+    return this.input;
+  }
+
   focus() {
     let { disabled, editable } = this.props;
 
@@ -218,6 +222,7 @@ export default class TextField extends PureComponent {
 
     return characterRestriction < text.length;
   }
+  
 
   onFocus(event) {
     let { onFocus } = this.props;
