@@ -136,6 +136,7 @@ export default class TextField extends PureComponent {
       errored: !!error,
 
       height: fontSize * 1.5,
+      offsetY: 0,
     };
   }
 
@@ -515,7 +516,16 @@ export default class TextField extends PureComponent {
         <Animated.View {...inputContainerProps}>
           {disabled && <Line type={disabledLineType} color={baseColor} />}
 
-          <Label {...labelProps}>{error ? error : label}</Label>
+          <Label
+            {...labelProps}
+            numberOfLines={error && (count > 0 || focused) ? 2 : 1}
+            offsetY={this.state.offsetY}
+            onLayout={e => {
+              this.setState({
+                offsetY: e.nativeEvent.layout.height,
+              })
+            }}
+          >{error ? error : label}</Label>
 
           <View style={styles.row}>
             {this.renderAffix("prefix", active, focused)}

@@ -85,6 +85,7 @@ export default class Label extends PureComponent {
       basePadding,
       fontFamily,
       labelLeft,
+      offsetY,
       style,
       ...props
     } = this.props;
@@ -96,11 +97,12 @@ export default class Label extends PureComponent {
           outputRange: [errorColor, baseColor, tintColor],
         });
 
+    const destY = baseSize - basePadding - activeFontSize;
     let top = input.interpolate({
       inputRange: [0, 1],
       outputRange: [
         baseSize + fontSize * 0.25,
-        baseSize - basePadding - activeFontSize,
+        destY - (offsetY - destY),
       ],
     });
 
